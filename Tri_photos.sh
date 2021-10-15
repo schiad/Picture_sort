@@ -24,20 +24,22 @@ echo Picture will be sorted in $dir_out path.
 
 mkdir tri
 
-for i in $(ls *mp4 *jpg *arw *crw *cr2 *dng *kdc *mrw *nef *nrw *orf *ptx *pef *raf *x3f *raw *rw2 $dir_origine)
+for i in $(ls $dir_origine/*)
 do
 	name=""
-	name=$(exiv2 -P nxyytv $dir_origine/$i | grep DateTime | sed 's/ \{1,\}/ /g' | cut -d' ' -f4 | sed 's/://g')
-	if [ -z ${#name} ];
+	name=$(exiv2 -P nxyytv $i | grep "DateTime " | sed 's/ \{1,\}/ /g' | cut -d' ' -f4 | sed 's/://g' | uniq)
+	if [ ${#name} -eq 0 ];
 	then
-		echo name from filename $name.
-		name=$(echo $i | cut -d_ -f2)
+		echo name from filename $i.
+		name=$(basename $i | cut -d_ -f2)
+		echo "name = $name"
 	fi
 	
-	echo file : $i
 	if [ -n ${#name} ];
 	then
-		mkdir $dir_out/$name 2>> ./logs.txt
-		mv $dir_origine/$i $dir_out/$name 2>> ./logs.txt
+		echo "mkdir $dir_out/$name 2>> /dev/zero"
+		mkdir $dir_out/$name 2>> /dev/zero
+		echo "mv $i $dir_out/$name 2>> /dev/zero"
+		mv $i $dir_out/$name 2>> /dev/zero
 	fi
 done
