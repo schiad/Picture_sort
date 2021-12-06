@@ -5,6 +5,8 @@ path=$(pwd)
 origine="no route to"
 out="no route to"
 
+IFS=$'\n'
+
 while [ ! -d "$path/$origine" ]
 do
 	echo "path to pictures to sort ? from actual path"
@@ -28,6 +30,13 @@ for i in $(ls $dir_origine/*)
 do
 	name=""
 	name=$(exiv2 -P nxyytv $i | grep "DateTime " | sed 's/ \{1,\}/ /g' | cut -d' ' -f4 | sed 's/://g' | uniq)
+	echo exif1 : $name
+	if [ ${#name} -eq 0 ];
+	then
+		name=$(exiv2 -P nxyytv $i | grep "DateTimeDigitized " | sed 's/ \{1,\}/ /g' | cut -d' ' -f4 | sed 's/://g' | uniq)
+		echo exif2 : $name
+	fi
+	
 	if [ ${#name} -eq 0 ];
 	then
 		echo name from filename $i.
